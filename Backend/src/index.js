@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import { connectDB } from "./db/index.js";
 import { User } from "./models/user.model.js";
+// import multer from 'multer'
 import bodyParser from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -14,17 +15,37 @@ connectDB();
 app.get("/", async (req, res) => {
   try {
     const data = await User.find();
-    res.json({ data: data });
+    res.json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 // post
-app.post("/add-users", async (req, res) => {
-  const { name, gmail, phone } = await req.body;
+// import multer from 'multer';
+// import path from 'path';
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, './public/temp'); // Specify your upload directory
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname)); // Set file name to current time + original file extension
+//   },
+// });
+
+// const upload = multer({ storage: storage })
+// upload.array("files",5),
+app.post("/add-users",async (req, res) => {
+
+  // console.log('req.files', req.files)
+  const { name, email, phone } = await req.body;
+  console.log(await req.body)
+  // const imagePath=req.files?.map(e=>e.filename)
+  // console.log(imagePath)
+
   try {
-    const userData = await User.create({ name, gmail, phone });
+    const userData = await User.create({ name, email, phone});
     res
       .status(200)
       .json({ message: "User created successfully...!", userData });
@@ -51,7 +72,7 @@ app.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const deletedData = await User.findByIdAndDelete(id);
-    res.status(200).json({ message: "Successfully deleted...!", deletedData });
+    res.status(200).json({ message: "Successfully deleted...!", deletedData});
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

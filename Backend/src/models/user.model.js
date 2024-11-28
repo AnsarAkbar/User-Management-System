@@ -5,16 +5,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    gmail: {
+    email: {
         type: String,
         required: true, 
-        unique: true
+        "unique" : true,
     },
     phone: {
         type: Number,
         required: true, 
-        unique: true
-    }},{timestamps:true}
+        "unique" : true,
+    },
+    // imagePath:{
+    //     type:[String],
+    //     // required: true, 
+    // }
+},{timestamps:true}
 );
 
 export const User = mongoose.model("User", userSchema);
