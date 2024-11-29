@@ -1,17 +1,32 @@
-import express, { response } from "express";
+import express from "express";
 import { connectDB } from "./db/index.js";
 import { User } from "./models/user.model.js";
-// import multer from 'multer'
-import bodyParser from "express";
+import multer from "multer";
+import path from "path";
 import dotenv from "dotenv";
+import cors from "cors";
+
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json()); // Handle JSON bodies
+app.use(cors()); // Enable CORS
+
 const port = 5000;
 connectDB();
 
-// get
+// Setup multer for file upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/temp"); // Directory for uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Set unique filename
+  },
+});
+const upload = multer({ storage: storage });
+
+// Get request to fetch users
 app.get("/", async (req, res) => {
   try {
     const data = await User.find();
@@ -21,65 +36,26 @@ app.get("/", async (req, res) => {
   }
 });
 
-// post
-// import multer from 'multer';
-// import path from 'path';
+// POST request to add a new user
+app.post("/add-users", upload.single("image_uri"), async (req, res) => {
+  // console.log('req.body:', req.body); // Should show text fields (name, email, phone)
+  // console.log('req.file:', req.file); // Should show file information (image file)
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, './public/temp'); // Specify your upload directory
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, Date.now() + path.extname(file.originalname)); // Set file name to current time + original file extension
-//   },
-// });
-
-// const upload = multer({ storage: storage })
-// upload.array("files",5),
-app.post("/add-users",async (req, res) => {
-
-  // console.log('req.files', req.files)
-  const { name, email, phone } = await req.body;
-  console.log(await req.body)
-  // const imagePath=req.files?.map(e=>e.filename)
-  // console.log(imagePath)
-
+  const { name, email, phone } = req.body; // Extract text fields from body
+  const imagePath = req.file ? req.file.filename : null; // Extract image file path
+  console.log(" ====== imagePath", imagePath);
+  console.log(" ====== req.body", req.body)
+  console.log(" ====== req.file", req.file)
+  
   try {
-    const userData = await User.create({ name, email, phone});
-    res
-      .status(200)
-      .json({ message: "User created successfully...!", userData });
-  } catch (error) {
-    res.status(401).json({ message: error.message });
-  }
-});
-// update
-app.put("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const updatedData = req.body;
-    const newData = await User.findByIdAndUpdate(id, updatedData, {
-      new: true,
-    });
-    res.status(200).json({ message: "User updated successfully...!", newData });
-  } catch (error) {
-    res.status(401).json({ message: error.message });
-  }
-});
-
-//delete
-app.delete("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const deletedData = await User.findByIdAndDelete(id);
-    res.status(200).json({ message: "Successfully deleted...!", deletedData});
+    const userData = await User.create({ name, email, phone, imagePath });
+    res.status(200).json({ message: "User created successfully!", userData });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
+// Start the server
 app.listen(process.env.PORT || port, () => {
-  console.log(
-    `Server is runing at http://localhost:${process.env.PORT || port}`
-  );
+  console.log(`Server is running at http://localhost:${process.env.PORT || port}`);
 });
