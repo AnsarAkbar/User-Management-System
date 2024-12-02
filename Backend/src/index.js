@@ -38,15 +38,9 @@ app.get("/", async (req, res) => {
 
 // POST request to add a new user
 app.post("/add-users", upload.single("image_uri"), async (req, res) => {
-  // console.log('req.body:', req.body); // Should show text fields (name, email, phone)
-  // console.log('req.file:', req.file); // Should show file information (image file)
 
   const { name, email, phone } = req.body; // Extract text fields from body
   const imagePath = req.file ? req.file.filename : null; // Extract image file path
-  console.log(" ====== imagePath", imagePath);
-  console.log(" ====== req.body", req.body)
-  console.log(" ====== req.file", req.file)
-  
   try {
     const userData = await User.create({ name, email, phone, imagePath });
     res.status(200).json({ message: "User created successfully!", userData });
@@ -54,6 +48,29 @@ app.post("/add-users", upload.single("image_uri"), async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+// PUT to update request
+app.put('/:id', async (req, res) => {
+  const data = req.body
+  console.log("============",req.body)
+  const { id } = req.params
+  console.log('...........id',id)
+  try {
+    const updatedData = await User.findByIdAndUpdate(id, data)
+    res.status(200).json({ message: 'User updated successfully...!', updatedData })
+  } catch (error) {
+    res.status(400).json({ message: "Something wrong", error: error.message })
+  }
+})
+// DELETE to delete data
+app.delete('/:id', async (req, res) => {
+  const { id } = req.params
+  try {
+    const deletedData = await User.findByIdAndDelete(id)
+    res.status(200).json({ message: 'User deleted successfully...!', deletedData },)
+  } catch (error) {
+    console.log(error.message)
+  }
+})
 
 // Start the server
 app.listen(process.env.PORT || port, () => {
