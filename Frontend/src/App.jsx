@@ -10,9 +10,7 @@ const App = () => {
   const [reload,setReload]=useState(false)
   const [showform,setShowform]=useState(true)
   const [id,setId]=useState("")
-  // console.log(id)
  
-  // console.log('apiResponse',apiResponse)
   useEffect(() => {
     setReload(false)
     axios
@@ -20,12 +18,7 @@ const App = () => {
       .then((res) => setApiResponse(res.data.data))
       .catch((error) => console.log(error.message));
   },[reload]);
-
-
-
-  // console.log(" ==== file", file)
-
-  // console.log("userData", userData);
+ 
   return (
     <div>
       <AddUser setReload={setReload} setUserdata={setUserdata} userData={userData} showform={showform} setShowform={setShowform} id={id} setId={setId}/>

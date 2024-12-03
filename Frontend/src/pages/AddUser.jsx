@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Input from "../components/Input";
 import { handleSubmit } from "../utils/handleSubmite";
 import Button from "../components/Button";
 
 const AddUser = ({ setReload,setUserdata,userData,showform,setShowform, id, setId  }) => {
   const [file, setFile] = useState(null);
-  const [edit,setEdit]=useState(false)
   const formRecord = [
     {
       type: "text",
@@ -31,36 +30,11 @@ const AddUser = ({ setReload,setUserdata,userData,showform,setShowform, id, setI
     setFile(e.target.files[0]);
   };
 
-// const handleSubmit = async (event, userData, file) => {
-//     console.log("Form submit triggered");
-
-//     event.preventDefault();
-
-//     console.log("Form submission prevented");
-
-//     const formData = new FormData();
-//     formData.append("name", userData.name);
-//     formData.append("email", userData.email);
-//     formData.append("phone", userData.phone);
-//     formData.append("image_uri", file);
-
-//     try {
-//       await axios.post("http://localhost:4000/add-users", formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
-//       console.log("Form data submitted successfully");
-//     } catch (error) {
-//       console.log("Error in submission", error.message);
-//     }
-//   };
-
-  return (
+ return (
     <div>
       <form
         encType="multipart/form-data"
-        onSubmit={(event) =>handleSubmit(event, userData, file, setReload, id, setId )}
+        onSubmit={(event) =>handleSubmit(event, userData,setUserdata, file, setReload, id, setId )}
         className="border-2 w-[400px] m-auto flex flex-col gap-2 p-5 "
       >
        

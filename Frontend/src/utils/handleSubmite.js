@@ -3,15 +3,13 @@ import axios from "axios";
 export const handleSubmit = async (
   event,
   userData,
+  setUserdata,
   file,
   setReload,
   id,
-  setUserdata
+  setId
 ) => {
-  console.log("!!!!!!!!!!!!!!!", id);
   event.preventDefault();
-  // console.log("----------id",id)
-  // console.log('+++++++++++++', userData);
 
   const formData = new FormData();
   formData.append("name", userData.name);
@@ -19,26 +17,25 @@ export const handleSubmit = async (
   formData.append("phone", userData.phone);
   formData.append("image_uri", file);
 
-  console.log("______________", userData);
-  // Reset userData state
   setUserdata({
     name: "",
     email: "",
     phone: "",
   });
 
+  // Reset userData state
   try {
-    console.log("***********************id", id);
     if (id) {
       setReload(true);
-      console.log("Editing user with ID:", id, "userData", userData);
+      // console.log("Editing user with ID:", id, "userData", userData);
       await axios.put(`http://localhost:4000/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      setId(null);
     } else {
-      console.log("Adding new user");
+      // console.log("Adding new user");
       setReload(true);
       await axios.post("http://localhost:4000/add-users", formData, {
         headers: {
@@ -46,8 +43,6 @@ export const handleSubmit = async (
         },
       });
     }
-
-    // console.log("Form data submitted successfully");
   } catch (error) {
     console.log("Error in submission", error.message);
   } finally {

@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Button from "../components/Button";
+import React from "react";
 import axios from "axios";
 
 const Users = ({ apiResponse, setReload, id, setId, userData, setUserdata}) => {
   const handleDelete = (e, id) => {
-    console.log("________________", id);
     setReload(true);
     axios
       .delete(`http://localhost:4000/${id}`, {
@@ -17,13 +15,10 @@ const Users = ({ apiResponse, setReload, id, setId, userData, setUserdata}) => {
   };
 
   const handleEdit = (id) => {
-    // console.log('--------------',typeof id)
     setId(id)
-    // console.log('__________id',id)
     apiResponse.map((value,index)=>{
       if(value._id===id){
         setUserdata({name:`${value.name}`,email:`${value.email}`,phone:`${value.phone}`})
-        // console.log(userData)
       }
   })
   };
