@@ -4,7 +4,7 @@ export const handleSubmit = async (
   event,
   userData,
   setUserdata,
-  file,
+  file,setFile,
   setReload,
   id,
   setId
@@ -22,11 +22,13 @@ export const handleSubmit = async (
     email: "",
     phone: "",
   });
+  setFile(null)
+  setReload(true);
 
   // Reset userData state
   try {
     if (id) {
-      setReload(true);
+      // setReload(true);
       // console.log("Editing user with ID:", id, "userData", userData);
       await axios.put(`http://localhost:4000/${id}`, formData, {
         headers: {
@@ -35,13 +37,12 @@ export const handleSubmit = async (
       });
       setId(null);
     } else {
-      // console.log("Adding new user");
-      setReload(true);
       await axios.post("http://localhost:4000/add-users", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("Adding new user");
     }
   } catch (error) {
     console.log("Error in submission", error.message);

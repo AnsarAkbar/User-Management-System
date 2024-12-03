@@ -26,12 +26,14 @@ const Users = ({ apiResponse, setReload, id, setId, userData, setUserdata}) => {
   return (
     <>
       {apiResponse?.map((value, index) => {
+        // {console.log("=============",value?.imagePath[0])}
         return (
-          <div id={value._id}
-            className="border-2 w-[400px] m-auto flex flex-col gap-2 p-5 my-1"
+          <div key={value._id}
+            className="border-2 w-[400px] m-auto flex gap-2 p-5 my-1 justify-between"
           >
-            <img src={value.imagePath?[0]:null} alt="img" />
-            <div>
+            {/* <img src={`http://localhost:4000/public/temp/${value?.imagePath[0]}`} alt="img" /> */}
+            <img className="w-[35%] max-h-28 rounded-full" src={`http://localhost:4000/file/${value?.imagePath}`} alt="img" />
+            <div className="w-[60%]">
               <div className="content">
                 <div>{value?.name}</div>
                 <div>{value?.email}</div>

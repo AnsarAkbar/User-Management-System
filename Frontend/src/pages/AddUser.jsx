@@ -34,7 +34,7 @@ const AddUser = ({ setReload,setUserdata,userData,showform,setShowform, id, setI
     <div>
       <form
         encType="multipart/form-data"
-        onSubmit={(event) =>handleSubmit(event, userData,setUserdata, file, setReload, id, setId )}
+        onSubmit={(event) =>handleSubmit(event, userData,setUserdata, file,setFile, setReload, id, setId )}
         className="border-2 w-[400px] m-auto flex flex-col gap-2 p-5 "
       >
        

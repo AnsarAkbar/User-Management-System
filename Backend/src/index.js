@@ -11,6 +11,8 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // Handle JSON bodies
 app.use(cors()); // Enable CORS
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 const port = 5000;
 connectDB();
@@ -35,12 +37,19 @@ app.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// Get files/images 
+app.use('/file/:filename', (req, res) => {
+  const { filename } = req.params;
+  console.log("===============",path)
+  res.sendFile(path.resolve('public', 'temp', filename));
+});
 
 // POST request to add a new user
 app.post("/add-users", upload.single("image_uri"), async (req, res) => {
 
   const { name, email, phone } = req.body; // Extract text fields from body
-  const imagePath = req.file ? req.file.filename : null; // Extract image file path
+  const imagePath = req.file ? req.file.filename : null;
+
   try {
     const userData = await User.create({ name, email, phone, imagePath });
     res.status(200).json({ message: "User created successfully!", userData });
