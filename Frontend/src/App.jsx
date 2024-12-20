@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
-import Users from "./pages/users";
+import Users from "./pages/Users";
 import AddUser from "./pages/AddUser";
 
 const App = () => {
